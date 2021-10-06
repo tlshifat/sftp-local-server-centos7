@@ -1,5 +1,7 @@
 # sftp-local-server-centos7
 
+#### Create Server
+
 1. create a new group,user and password
 ```shell script
 sudo groupadd sftponly
@@ -34,8 +36,9 @@ chown user_1:sftponly /home/user_1/.ssh/authorized_keys
 
 Search and modify  the followings: 
 ```Subsystem sftp internal-sftp
+PubKey Authentication yes
 PasswordAuthentication no
-AuthorizedKeys %h/.ssh/authorized_keys
+AuthorizedKeysFile %h/.ssh/authorized_keys
 ```
 
 Add the followings EOF:
@@ -44,4 +47,15 @@ Add the followings EOF:
    ForceCommand internal-sftp
    AllowTcpForwarding no
    X11Forwarding no
+```
+
+#### File upload 
+
+```cd /home/vagrant
+touch test.txt
+local_path=/home/vagrant/test.txt
+remote_path=/ftp_up/
+sftp -v  user_1@localhost <<EOF
+put $local_path $remote_path
+EOF
 ```
